@@ -7,7 +7,7 @@ import { getCategoryName } from "../../data/MockDataAPI";
 
 export default function HomeScreen(props) {
   const [product, setProduct] = useState([])
-  var URLApi = "http://192.168.1.10:3000/get-all-prod";
+  var URLApi = "https://fdf5-113-176-178-251.ngrok-free.app/get-all-prod";
   //fetch data get all prod
   // call api
   useEffect(() => {

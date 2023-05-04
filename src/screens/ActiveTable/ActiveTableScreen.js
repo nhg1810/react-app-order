@@ -7,7 +7,7 @@ import MenuImage from "../../components/MenuImage/MenuImage";
 
 export default function ActiveTableScreen(props) {
   // list of table
-  const URLApi = "http://192.168.1.10:3000/get-all-table";
+  const URLApi = "https://fdf5-113-176-178-251.ngrok-free.app/get-all-table";
   const [table, setTable] = useState([]);
   const { navigation, route } = props;
 

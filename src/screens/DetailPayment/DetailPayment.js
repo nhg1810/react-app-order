@@ -77,7 +77,7 @@ export default function DetailPayment(props) {
     }, [listOrder]);
 
     const [product, setProduct] = useState([])
-    var URLApi = "http://192.168.1.10:3000/get-all-prod";
+    var URLApi = "https://fdf5-113-176-178-251.ngrok-free.app/get-all-prod";
     //fetch data get all prod
     // call api
     useEffect(() => {
@@ -257,7 +257,7 @@ export default function DetailPayment(props) {
             }
             console.log(api_obj);
 
-            let rs = await postData("http://192.168.1.10:3000/update-order", api_obj);
+            let rs = await postData("https://fdf5-113-176-178-251.ngrok-free.app/update-order", api_obj);
             if (rs == 'success') {
                 Alert.alert('Thành công', 'Thêm order thành công!');
                 navigation.navigate("ActiveTable", { message: 'render' });
@@ -293,7 +293,7 @@ export default function DetailPayment(props) {
                 }
                 console.log(api_obj);
 
-                let rs = await postData("http://192.168.1.10:3000/update-order", api_obj);
+                let rs = await postData("https://fdf5-113-176-178-251.ngrok-free.app/update-order", api_obj);
                 if (rs == 'success') {
                     Alert.alert('Thành công', 'Thanh toán thành công ! Kiếm tra đơn đã thanh toán ở mục quản lí đơn');
                     navigation.navigate("ActiveTable", { message: 'render' });
@@ -306,7 +306,7 @@ export default function DetailPayment(props) {
                     status: true
                 }
             }
-            let rs = await postData("http://192.168.1.10:3000/update-order", api_obj);
+            let rs = await postData("https://fdf5-113-176-178-251.ngrok-free.app/update-order", api_obj);
             if (rs == 'success') {
                 Alert.alert('Thành công', 'Thanh toán thành công ! Kiếm tra đơn đã thanh toán ở mục quản lí đơn');
                 navigation.navigate("ActiveTable", { message: 'render' });

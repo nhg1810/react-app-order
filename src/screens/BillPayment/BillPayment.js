@@ -7,7 +7,7 @@ import { TextInput } from "react-native-gesture-handler";
 
 export default function BillPayment(props) {
   // list of table
-  const URLApi = "http://192.168.1.10:3000/get-all-table";
+  const URLApi = "https://fdf5-113-176-178-251.ngrok-free.app/get-all-table";
   const [table, setTable] = useState([]);
 
   const { navigation } = props;
@@ -112,7 +112,7 @@ export default function BillPayment(props) {
       let obj = {
         vlSearch: text
       }
-      let rs = await postData('http://192.168.1.10:3000/live-search-order', obj);
+      let rs = await postData('https://fdf5-113-176-178-251.ngrok-free.app/live-search-order', obj);
       if (rs.lengh != 0) {
         setData(rs)
       }

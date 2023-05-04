@@ -38,8 +38,8 @@ export default function AddOrder(props) {
     const {message} = useContext(SocketContext);
     console.log("haahahaha: ", message)
 
-    var URLApi = "http://192.168.1.10:3000/get-all-prod";
-    var URLApiAccount = "http://192.168.1.10:3000/admin/get-all-account-app";
+    var URLApi = "https://fdf5-113-176-178-251.ngrok-free.app/get-all-prod";
+    var URLApiAccount = "https://fdf5-113-176-178-251.ngrok-free.app/admin/get-all-account-app";
     //fetch data get all prod
     // call api
     useEffect(() => {
@@ -266,7 +266,7 @@ export default function AddOrder(props) {
                 account: acc,
                 product: convertBodyOrder
             }
-            let rs = await postData("http://192.168.1.10:3000/add-to-cart-app", obj);
+            let rs = await postData("https://fdf5-113-176-178-251.ngrok-free.app/add-to-cart-app", obj);
             console.log(rs);
             if (rs.status == "success") {
                 navigation.navigate("ActiveTable", { message: 'render' });

@@ -8,7 +8,7 @@ import styles from "./style";
 export default function AccountScreen(props) {
     // list of table
     const [account, setAccount] = useState([])
-    var URLApi = "http://192.168.1.10:3000/admin/get-all-account-app";
+    var URLApi = "https://fdf5-113-176-178-251.ngrok-free.app/admin/get-all-account-app";
     //fetch data get all prod
     // call api
     useEffect(() => {

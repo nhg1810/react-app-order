@@ -35,6 +35,11 @@ export default function BillPayment(props) {
               })
               setTable(arr_tbl);
             }
+          }).then(() => {
+            if (value == "") {
+              setData(table);
+
+            }
           })
           .catch(function (err) {
             console.log(err)
@@ -42,10 +47,11 @@ export default function BillPayment(props) {
       })
 
     },
-      [props])
+      [props, table])
       ;
   }
   useLayoutEffect(() => {
+
     navigation.setOptions({
       headerLeft: () => (
         <MenuImage
@@ -59,9 +65,14 @@ export default function BillPayment(props) {
           <Image style={styles.searchIcon} source={require("../../../assets/icons/search.png")} />
           <TextInput
             style={styles.searchInput}
+            placeholder="Tìm kiếm bằng tên bàn"
+            onChangeText={liveSearch}
+            value={value}
 
           />
-          <Pressable>
+          <Pressable onPress={() => {
+            clearValueSearch()
+          }}>
             <Image style={styles.searchIcon} source={require("../../../assets/icons/close.png")} />
           </Pressable>
         </View>
@@ -69,28 +80,46 @@ export default function BillPayment(props) {
       headerRight: () => <View />,
     });
   }, [value]);
+  const clearValueSearch = () => {
+    setValue("")
+  }
+  //function post api
+  const postData = async (url = "", data = {}) => {
+    // Default options are marked with *
+    const response = await fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
 
-  useEffect(() => { }, [value]);
 
-  // const handleSearch = (text) => {
-  //   setValue(text);
-  //   var recipeArray1 = getRecipesByRecipeName(text);
-  //   var recipeArray2 = getRecipesByCategoryName(text);
-  //   var recipeArray3 = getRecipesByIngredientName(text);
-  //   var aux = recipeArray1.concat(recipeArray2);
-  //   var recipeArray = [...new Set(aux)];
+  const liveSearch = async (text) => {
+    setValue(text)
+    if (text == "") {
+      setData(table)
+      console.log('show all')
+    } else {
+      let obj = {
+        vlSearch: text
+      }
+      let rs = await postData('http://192.168.1.10:3000/live-search-order', obj);
+      if (rs.lengh != 0) {
+        setData(rs)
+      }
 
-  //   if (text == "") {
-  //     setData([]);
-  //   } else {
-  //     setData(recipeArray);
-  //   }
-  // };
-
-  const onPressRecipe = (item) => {
-    navigation.navigate("Recipe", { item });
-  };
-
+      console.log(rs)
+    }
+  }
   const renderTable = ({ item }) => {
     let total = 0;
     return (<TouchableHighlight underlayColor="rgba(73,182,77,0.9)">
@@ -114,7 +143,7 @@ export default function BillPayment(props) {
           })
 
           }
-          <Text style={styles.totalBill}>TỔNG BILL: {total} vnđ</Text> 
+          <Text style={styles.totalBill}>TỔNG BILL: {total} vnđ</Text>
           <Text> - Ngày thanh toán: {item.updatedAt}</Text>
         </View>
       </View>
@@ -124,7 +153,7 @@ export default function BillPayment(props) {
 
   return (
     <View style={styles.containBillPayment}>
-      <FlatList vertical showsVerticalScrollIndicator={false} numColumns={1} data={table} renderItem={renderTable} keyExtractor={(item) => `${item._id}`} />
+      <FlatList vertical showsVerticalScrollIndicator={false} numColumns={1} data={data} renderItem={renderTable} keyExtractor={(item) => `${item._id}`} />
     </View>
   );
 }

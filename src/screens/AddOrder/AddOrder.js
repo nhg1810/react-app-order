@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
     ScrollView,
     Text,
@@ -21,6 +21,7 @@ import BackButton from "../../components/BackButton/BackButton";
 import ViewIngredientsButton from "../../components/ViewIngredientsButton/ViewIngredientsButton";
 import { FlatList } from "react-native-gesture-handler";
 import SelectDropdown from 'react-native-select-dropdown';
+import { SocketContext } from "../../context/SocketContext";
 const countries = ["Egypt", "Canada", "Australia", "Ireland"]
 
 const { width: viewportWidth } = Dimensions.get("window");
@@ -34,6 +35,8 @@ export default function AddOrder(props) {
     const [total, setTotal] = useState([]);
     const [accountOrder, setAccountOrder] = useState();
     const [convertBodyOrder, setConvertBodyOrder] = useState([]);
+    const {message} = useContext(SocketContext);
+    console.log("haahahaha: ", message)
 
     var URLApi = "http://192.168.1.10:3000/get-all-prod";
     var URLApiAccount = "http://192.168.1.10:3000/admin/get-all-account-app";
@@ -266,7 +269,8 @@ export default function AddOrder(props) {
             let rs = await postData("http://192.168.1.10:3000/add-to-cart-app", obj);
             console.log(rs);
             if (rs.status == "success") {
-                console.log();
+                navigation.navigate("ActiveTable", { message: 'render' });
+
                 Alert.alert('Thành công', 'Bàn: ' + name + ' đã được: ' + infAccount[accountOrder].name + ' thêm thành công !')
             }
             //

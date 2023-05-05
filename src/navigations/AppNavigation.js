@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import { createDrawerNavigator } from '@react-navigation/drawer'
@@ -13,10 +13,14 @@ import AccountScreen from '../screens/Account/AccountScreen';
 import AddOrder from '../screens/AddOrder/AddOrder';
 import DetailPayment from '../screens/DetailPayment/DetailPayment';
 import ActiveTableScreen from '../screens/ActiveTable/ActiveTableScreen';
+import ToastNotification from '../Toast/toast';
+import { SocketContext } from '../context/SocketContext';
+import History from '../screens/History/History';
 
 const Stack = createStackNavigator();
 
 function MainNavigator() {
+
   return (
     //lib slide nav left in pages
     <Stack.Navigator
@@ -30,7 +34,7 @@ function MainNavigator() {
       }}
     >
       <Stack.Screen name='Home' component={HomeScreen} />
-      <Stack.Screen name='ActiveTable'  component={ActiveTableScreen} />
+      <Stack.Screen name='ActiveTable' component={ActiveTableScreen} />
       <Stack.Screen name='Recipe' component={RecipeScreen} />
       <Stack.Screen name='RecipesList' component={RecipesListScreen} />
       <Stack.Screen name='Ingredient' component={IngredientScreen} />
@@ -39,6 +43,7 @@ function MainNavigator() {
       <Stack.Screen name='IngredientsDetails' component={IngredientsDetailsScreen} />
       <Stack.Screen name='AddOrder' component={AddOrder} />
       <Stack.Screen name='DetailPayment' component={DetailPayment} />
+      <Stack.Screen name='History' component={History}/>
 
 
 
@@ -72,8 +77,35 @@ function DrawerStack() {
 
 
 export default function AppContainer() {
+  const [visiableToast, setVisiableToast] = useState(false);
+  const [backgroundToast, setBackgroundToast] = useState('#20639B');
+  const { server } = useContext(SocketContext);
+
+  useEffect(() => {
+    console.log("server-respone-realtime: ", server)
+    if (server) {
+      if (server.target == 'add-order-successfuly') {
+        setBackgroundToast('#20639B');
+      } else if (server.target == 'payments-order-successfuly') {
+        setBackgroundToast('green');
+      } else if (server.target == 'update-order-successfuly') {
+        setBackgroundToast('#f4c05f');
+      }
+      setVisiableToast(true)
+    }
+    setTimeout(function () {
+      setVisiableToast(false)
+    }, 4000)
+  }, [server])
+
   return (
     <NavigationContainer>
+      {!visiableToast ? <>
+
+      </> : <ToastNotification data={server.message} background={backgroundToast}>
+
+      </ToastNotification>}
+
       <DrawerStack />
     </NavigationContainer>
   )

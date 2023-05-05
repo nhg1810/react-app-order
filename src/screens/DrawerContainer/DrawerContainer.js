@@ -37,9 +37,17 @@ export default function DrawerContainer(props) {
 
         <MenuButton
           title="Nhân viên"
-          source={require("../../../assets/icons/home.png")}
+          source={require("../../../assets/icons/info.png")}
           onPress={() => {
             navigation.navigate("Account");
+            navigation.closeDrawer();
+          }}
+        />
+         <MenuButton
+          title="Lịch sử"
+          source={require("../../../assets/icons/list.png")}
+          onPress={() => {
+            navigation.navigate("History");
             navigation.closeDrawer();
           }}
         />

@@ -35,11 +35,13 @@ export default function AddOrder(props) {
     const [total, setTotal] = useState([]);
     const [accountOrder, setAccountOrder] = useState();
     const [convertBodyOrder, setConvertBodyOrder] = useState([]);
-    const {message} = useContext(SocketContext);
-    console.log("haahahaha: ", message)
 
-    var URLApi = "https://fdf5-113-176-178-251.ngrok-free.app/get-all-prod";
-    var URLApiAccount = "https://fdf5-113-176-178-251.ngrok-free.app/admin/get-all-account-app";
+    const context = useContext(SocketContext);
+    console.log('context', context);
+
+
+    var URLApi = "http://192.168.1.10:3000/get-all-prod";
+    var URLApiAccount = "http://192.168.1.10:3000/admin/get-all-account-app";
     //fetch data get all prod
     // call api
     useEffect(() => {
@@ -241,6 +243,9 @@ export default function AddOrder(props) {
     }
     //add order
     const addOrder = async () => {
+
+
+
         let submit = true;
         if (!name) {
             submit = false;
@@ -266,9 +271,19 @@ export default function AddOrder(props) {
                 account: acc,
                 product: convertBodyOrder
             }
-            let rs = await postData("https://fdf5-113-176-178-251.ngrok-free.app/add-to-cart-app", obj);
+            let rs = await postData("http://192.168.1.10:3000/add-to-cart-app", obj);
             console.log(rs);
             if (rs.status == "success") {
+                context.sendMessageToSocket({
+                    status: 'ok',
+                    target: 'add-order',
+                    content: 'Bàn: ' + name + ' đã được: ' + infAccount[accountOrder].name + ' thêm thành công !'
+                })
+                let save_alert = await postData("http://192.168.1.10:3000/add-alert", {
+                    target: 'add-order',
+                    content: 'Bàn: ' + name + ' đã được: ' + infAccount[accountOrder].name + ' thêm thành công !'
+                })
+                console.log(save_alert);
                 navigation.navigate("ActiveTable", { message: 'render' });
 
                 Alert.alert('Thành công', 'Bàn: ' + name + ' đã được: ' + infAccount[accountOrder].name + ' thêm thành công !')

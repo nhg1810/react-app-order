@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   listProduct: {
     marginTop: 50,
     overflow: 'scroll',
-    maxHeight: 700,
+    maxHeight: 350,
     backgroundColor: 'white',
     borderLeftWidth: 3,
     borderLeftColor: '#cccccc'

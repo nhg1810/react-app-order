@@ -53,7 +53,7 @@ export default function RecipeScreen(props) {
   const renderImage = ({ item }) => (
     <TouchableHighlight>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{ uri: item.urlLinkImage }} />
+        <Image style={styles.image} source={{ uri: item.urlLinkImage.trim()}} />
       </View>
     </TouchableHighlight>
   );

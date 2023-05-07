@@ -8,7 +8,7 @@ import styles from "./style";
 export default function AccountScreen(props) {
     // list of table
     const [account, setAccount] = useState([])
-    var URLApi = "http://192.168.1.10:3000/admin/get-all-account-app";
+    var URLApi = "https://40a6-113-176-178-251.ngrok-free.app/admin/get-all-account-app";
     //fetch data get all prod
     // call api
     useEffect(() => {
@@ -78,7 +78,7 @@ export default function AccountScreen(props) {
                 borderWidth: 0.5,
                 borderRadius: 15
             }}>
-                {/* <Image style={styles.photo} source={{ uri: item.image[0].urlLinkImage }} /> */}
+                {/* <Image style={styles.photo} source={{ uri: item.image[0].urlLinkImage.trim() }} /> */}
                 <Text style={styles.title}>{item.name}</Text>
                 <Text style={styles.category}>{item.email}</Text>
             </View >

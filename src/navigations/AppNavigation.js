@@ -95,16 +95,16 @@ export default function AppContainer() {
     }
     setTimeout(function () {
       setVisiableToast(false)
-    }, 4000)
+    }, 3000)
   }, [server])
 
   return (
     <NavigationContainer>
       {!visiableToast ? <>
 
-      </> : <ToastNotification data={server.message} background={backgroundToast}>
+      </> : <><ToastNotification data={server.message} background={backgroundToast}>
 
-      </ToastNotification>}
+</ToastNotification></>}
 
       <DrawerStack />
     </NavigationContainer>

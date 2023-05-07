@@ -78,7 +78,7 @@ export default function DetailPayment(props) {
     }, [listOrder]);
 
     const [product, setProduct] = useState([])
-    var URLApi = "http://192.168.1.10:3000/get-all-prod";
+    var URLApi = "https://40a6-113-176-178-251.ngrok-free.app/get-all-prod";
     //fetch data get all prod
     // call api
     useEffect(() => {
@@ -107,7 +107,7 @@ export default function DetailPayment(props) {
     const renderRecipes = ({ item }) => (
         <TouchableHighlight underlayColor="rgba(73,182,77,0.9)" onPress={() => saveInListOrder(item)}>
             <View style={styles.itemProduct}>
-                <Image style={styles.photo} source={{ uri: item.image[0].urlLinkImage }} />
+                <Image style={styles.photo} source={{ uri: item.image[0].urlLinkImage.trim() }} />
                 <Text style={styles.title}>{item.nameProduct}</Text>
                 <Text style={styles.price}>{item.price} đồng</Text>
 
@@ -161,7 +161,7 @@ export default function DetailPayment(props) {
                 id: item._id,
                 name: item.nameProduct,
                 price: item.price,
-                image: item.image[0].urlLinkImage,
+                image: item.image[0].urlLinkImage.trim(),
                 count: 1
             }])
 
@@ -180,7 +180,7 @@ export default function DetailPayment(props) {
                     id: item._id,
                     name: item.nameProduct,
                     price: item.price,
-                    image: item.image[0].urlLinkImage,
+                    image: item.image[0].urlLinkImage.trim(),
                     count: 1
                 })
             }
@@ -234,8 +234,10 @@ export default function DetailPayment(props) {
     //update order
     const updateOrder = async () => {
         console.log('123');
+        let str_order_more = ""
         let arr_detail = deltailOrder;
         for (let i = 0; i < listOrder.length; i++) {
+            str_order_more += '\n' + '-' + listOrder[i].name + ` với sl ` + listOrder[i].count + ', ';
             let duplicate = false;
             arr_detail.product.map((item, index) => {
                 if (item.prod._id === listOrder[i].id) {
@@ -261,7 +263,7 @@ export default function DetailPayment(props) {
             }
         }
         console.log(api_obj);
-        let rs = await postData("http://192.168.1.10:3000/update-order", api_obj);
+        let rs = await postData("https://40a6-113-176-178-251.ngrok-free.app/update-order", api_obj);
         if (rs == 'success') {
             context.sendMessageToSocket({
                 status: 'ok',
@@ -270,11 +272,12 @@ export default function DetailPayment(props) {
             })
             Alert.alert('Thành công', 'Cập nhật bill thành công!');
             navigation.navigate("ActiveTable", { message: 'render' });
-            let save_alert = await postData("http://192.168.1.10:3000/add-alert", {
+            let save_alert = await postData("https://40a6-113-176-178-251.ngrok-free.app/add-alert", {
                 target: 'update-bill',
-                content: deltailOrder.name + ' đã được ' + deltailOrder.account.name + ' cập nhật thêm món!'
+                content: deltailOrder.name + ' đã được ' + deltailOrder.account.name + ' cập nhật món ' + str_order_more
+
             })
-            console.log(save_alert);
+            console.log('save_alert', save_alert);
         }
     }
     //payment
@@ -297,29 +300,30 @@ export default function DetailPayment(props) {
                         prod: listOrder[i].id
                     })
                 }
-                let api_obj = {
-                    _id: arr_detail._id,
-                    obj: {
-                        product: arr_detail.product,
-                        status: true
-                    }
+
+            }
+            let api_obj = {
+                _id: arr_detail._id,
+                obj: {
+                    product: arr_detail.product,
+                    status: true
                 }
-                let rs = await postData("http://192.168.1.10:3000/update-order", api_obj);
-                if (rs == 'success') {
-                    console.log('des', deltailOrder)
-                    context.sendMessageToSocket({
-                        status: 'ok',
-                        target: 'payment-bill',
-                        content: deltailOrder.name + ' đã được ' + deltailOrder.account.name + ' thanh toán!'
-                    })
-                    Alert.alert('Thành công', 'Thanh toán thành công ! Kiếm tra đơn đã thanh toán ở mục quản lí đơn');
-                    navigation.navigate("ActiveTable", { message: 'render' });
-                    let save_alert = await postData("http://192.168.1.10:3000/add-alert", {
-                        target: 'payment-successful',
-                        content: deltailOrder.name + ' đã được ' + deltailOrder.account.name + ' thanh toán!'
-                    })
-                    console.log(save_alert);
-                }
+            }
+            let rs = await postData("https://40a6-113-176-178-251.ngrok-free.app/update-order", api_obj);
+            if (rs == 'success') {
+                console.log('des', deltailOrder)
+                context.sendMessageToSocket({
+                    status: 'ok',
+                    target: 'payment-bill',
+                    content: deltailOrder.name + ' đã được ' + deltailOrder.account.name + ' thanh toán!'
+                })
+                Alert.alert('Thành công', 'Thanh toán thành công ! Kiếm tra đơn đã thanh toán ở mục quản lí đơn');
+                navigation.navigate("ActiveTable", { message: 'render' });
+                let save_alert = await postData("https://40a6-113-176-178-251.ngrok-free.app/add-alert", {
+                    target: 'payment-successful',
+                    content: deltailOrder.name + ' đã được ' + deltailOrder.account.name + ' thanh toán!'
+                })
+                console.log(save_alert);
             }
         } else {
             let api_obj = {
@@ -328,7 +332,7 @@ export default function DetailPayment(props) {
                     status: true
                 }
             }
-            let rs = await postData("http://192.168.1.10:3000/update-order", api_obj);
+            let rs = await postData("https://40a6-113-176-178-251.ngrok-free.app/update-order", api_obj);
             if (rs == 'success') {
                 context.sendMessageToSocket({
                     status: 'ok',
@@ -337,7 +341,7 @@ export default function DetailPayment(props) {
                 })
                 Alert.alert('Thành công', 'Thanh toán thành công ! Kiếm tra đơn đã thanh toán ở mục quản lí đơn');
                 navigation.navigate("ActiveTable", { message: 'render' });
-                let save_alert = await postData("http://192.168.1.10:3000/add-alert", {
+                let save_alert = await postData("https://40a6-113-176-178-251.ngrok-free.app/add-alert", {
                     target: 'payment-successful',
                     content: deltailOrder.name + ' đã được ' + deltailOrder.account.name + ' thanh toán!'
                 })
@@ -353,7 +357,7 @@ export default function DetailPayment(props) {
             <View style={styles.listProduct}>
 
                 <Text style={styles.title}>
-                    Chọn sản phẩm
+
                 </Text>
                 <FlatList vertical showsVerticalScrollIndicator={false} numColumns={1} data={product} renderItem={renderRecipes} keyExtractor={(item) => `${item._id}`} />
             </View>

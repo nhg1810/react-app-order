@@ -10,6 +10,15 @@ const styles = StyleSheet.create({
     height: 14,
     width: 14,
   },
+  viewLoader:{
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'white',
+    flex: 1 ,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+  },
   searchContainer: { 
     flexDirection: "row", 
     alignItems: "center", 

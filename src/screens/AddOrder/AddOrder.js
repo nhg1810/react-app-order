@@ -40,8 +40,8 @@ export default function AddOrder(props) {
     console.log('context', context);
 
 
-    var URLApi = "http://192.168.1.10:3000/get-all-prod";
-    var URLApiAccount = "http://192.168.1.10:3000/admin/get-all-account-app";
+    var URLApi = "https://40a6-113-176-178-251.ngrok-free.app/get-all-prod";
+    var URLApiAccount = "https://40a6-113-176-178-251.ngrok-free.app/admin/get-all-account-app";
     //fetch data get all prod
     // call api
     useEffect(() => {
@@ -143,7 +143,7 @@ export default function AddOrder(props) {
                 id: item._id,
                 name: item.nameProduct,
                 price: item.price,
-                image: item.image[0].urlLinkImage,
+                image: item.image[0].urlLinkImage.trim(),
                 count: 1
             }])
 
@@ -162,7 +162,7 @@ export default function AddOrder(props) {
                     id: item._id,
                     name: item.nameProduct,
                     price: item.price,
-                    image: item.image[0].urlLinkImage,
+                    image: item.image[0].urlLinkImage.trim(),
                     count: 1
                 })
             }
@@ -201,7 +201,7 @@ export default function AddOrder(props) {
     const renderRecipes = ({ item }) => (
         <TouchableHighlight underlayColor="rgba(73,182,77,0.9)" onPress={() => saveInListOrder(item)} >
             <View style={styles.itemProduct}>
-                <Image style={styles.photo} source={{ uri: item.image[0].urlLinkImage }} />
+                <Image style={styles.photo} source={{ uri: item.image[0].urlLinkImage.trim() }} />
                 <Text style={styles.title}>{item.nameProduct}</Text>
                 <Text style={styles.price}>{item.price} đồng</Text>
 
@@ -271,7 +271,7 @@ export default function AddOrder(props) {
                 account: acc,
                 product: convertBodyOrder
             }
-            let rs = await postData("http://192.168.1.10:3000/add-to-cart-app", obj);
+            let rs = await postData("https://40a6-113-176-178-251.ngrok-free.app/add-to-cart-app", obj);
             console.log(rs);
             if (rs.status == "success") {
                 context.sendMessageToSocket({
@@ -279,7 +279,7 @@ export default function AddOrder(props) {
                     target: 'add-order',
                     content: 'Bàn: ' + name + ' đã được: ' + infAccount[accountOrder].name + ' thêm thành công !'
                 })
-                let save_alert = await postData("http://192.168.1.10:3000/add-alert", {
+                let save_alert = await postData("https://40a6-113-176-178-251.ngrok-free.app/add-alert", {
                     target: 'add-order',
                     content: 'Bàn: ' + name + ' đã được: ' + infAccount[accountOrder].name + ' thêm thành công !'
                 })

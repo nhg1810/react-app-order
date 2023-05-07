@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { FlatList, Text, View, Image, TouchableHighlight, Pressable } from "react-native";
+import { FlatList, Text, View, Image, TouchableHighlight, Pressable, ActivityIndicator } from "react-native";
 import styles from "./styles";
 import MenuImage from "../../components/MenuImage/MenuImage";
 import { getCategoryName, getRecipesByRecipeName, getRecipesByCategoryName, getRecipesByIngredientName } from "../../data/MockDataAPI";
@@ -7,13 +7,14 @@ import { TextInput } from "react-native-gesture-handler";
 
 export default function BillPayment(props) {
   // list of table
-  const URLApi = "http://192.168.1.10:3000/get-all-table";
+  const URLApi = "https://40a6-113-176-178-251.ngrok-free.app/get-all-table";
   const [table, setTable] = useState([]);
 
   const { navigation } = props;
 
   const [value, setValue] = useState("");
   const [data, setData] = useState([]);
+  const [loader, setLoader] = useState(true);
   // call api all table payment
   getApi()
   function getApi() {
@@ -101,7 +102,11 @@ export default function BillPayment(props) {
     });
     return response.json(); // parses JSON response into native JavaScript objects
   }
-
+  useEffect(() => {
+    if (data.length != 0) {
+      setLoader(false)
+    }
+  }, [data])
 
   const liveSearch = async (text) => {
     setValue(text)
@@ -112,7 +117,7 @@ export default function BillPayment(props) {
       let obj = {
         vlSearch: text
       }
-      let rs = await postData('http://192.168.1.10:3000/live-search-order', obj);
+      let rs = await postData('https://40a6-113-176-178-251.ngrok-free.app/live-search-order', obj);
       if (rs.lengh != 0) {
         setData(rs)
       }
@@ -132,14 +137,12 @@ export default function BillPayment(props) {
 
           {item.product.map((product, index) => {
             total += parseFloat(product.prod.price) * parseFloat(product.count);
-            return (<>
+            return (
 
 
-              <Text key= {index+product.prod.id} style={styles.nameItemProduct}> <Image style={styles.photo} source={{ uri: product.prod.image[0].urlLinkImage }} /> {product.prod.nameProduct} ({product.prod.price}) * {product.count} sp = {product.prod.price * product.count} đ</Text>
+              <Text key={product.prod._id} style={styles.nameItemProduct}> <Image style={styles.photo} source={{ uri: product.prod.image[0].urlLinkImage }} /> {product.prod.nameProduct} ({product.prod.price}) * {product.count} sp = {product.prod.price * product.count} đ</Text>
 
-
-
-            </>)
+            )
           })
 
           }
@@ -152,8 +155,13 @@ export default function BillPayment(props) {
   };
 
   return (
-    <View style={styles.containBillPayment}>
-      <FlatList vertical showsVerticalScrollIndicator={false} numColumns={1} data={data} renderItem={renderTable} keyExtractor={(item) => `${item._id}`} />
-    </View>
+    loader ?
+      <View style={styles.viewLoader}>
+        <ActivityIndicator size="large" />
+        <Text>Đang tải...</Text>
+      </View> :
+      <View style={styles.containBillPayment}>
+        <FlatList vertical showsVerticalScrollIndicator={false} numColumns={1} data={data} renderItem={renderTable} keyExtractor={(item) => `${item._id}`} />
+      </View>
   );
 }

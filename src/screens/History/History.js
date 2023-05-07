@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
-import { FlatList, Text, View, TouchableHighlight, Image } from "react-native";
+import { FlatList, Text, View, TouchableHighlight, Image, ActivityIndicator } from "react-native";
 import styles from "./styles";
 import { recipes } from "../../data/dataArrays";
 import MenuImage from "../../components/MenuImage/MenuImage";
@@ -9,8 +9,9 @@ import { SocketContext } from "../../context/SocketContext";
 
 export default function History(props) {
     const [alert, setAlert] = useState([])
-    const {server} = useContext(SocketContext);
-    var URLApi = "http://192.168.1.10:3000/get-all-alert";
+    const { server } = useContext(SocketContext);
+    const [loader, setLoader] = useState(true);
+    var URLApi = "https://40a6-113-176-178-251.ngrok-free.app/get-all-alert";
     //fetch data get all prod
     // call api
     useEffect(() => {
@@ -36,7 +37,14 @@ export default function History(props) {
         ;
 
     const { navigation } = props;
+    useEffect(() => {
+        if (alert) {
+            setTimeout(function () {
+                setLoader(false);
 
+            }, 2000)
+        }
+    }, [alert])
     useLayoutEffect(() => {
         navigation.setOptions({
             headerLeft: () => (
@@ -80,8 +88,13 @@ export default function History(props) {
     };
 
     return (
-        <View>
-            <FlatList vertical showsVerticalScrollIndicator={false} numColumns={1} data={alert} renderItem={renderRecipes} keyExtractor={(item) => `${item._id}`} />
-        </View>
+        loader ?
+            <View style={styles.viewLoader}>
+                <ActivityIndicator size="large" />
+                <Text>Đang tải...</Text>
+            </View> :
+            <View>
+                <FlatList vertical showsVerticalScrollIndicator={false} numColumns={1} data={alert} renderItem={renderRecipes} keyExtractor={(item) => `${item._id}`} />
+            </View>
     );
 }

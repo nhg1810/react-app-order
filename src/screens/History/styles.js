@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { RecipeCard } from '../../AppStyles';
-import {  Dimensions } from 'react-native';
+import { Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width < height ? width : height;
 
@@ -10,11 +10,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: SCREEN_WIDTH,
-        minHeight: 100,
-        borderColor: '#cccccc',
+        height: 100,
+        overflow: 'scroll',
+        marginTop: 3,
         backgroundColor: 'white',
-        borderWidth: 0.5,
-        borderRadius: 15
+      
+    },
+    viewLoader: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'white',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+
     },
     photo: RecipeCard.photo,
     title: RecipeCard.title,

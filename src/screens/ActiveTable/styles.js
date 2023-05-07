@@ -1,6 +1,15 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+  viewLoader: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'white',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+
+  },
   categoriesItemContainer: {
     width: 150,
     flex: 1,
@@ -13,12 +22,12 @@ const styles = StyleSheet.create({
     overflow: 'scroll'
   },
   areaContainTable: {
-    flex:1,
+    flex: 1,
     alignItems: 'center',
     marginTop: 3,
     height: 400,
-    width: '100%', 
-    backgroundColor : 'white'
+    width: '100%',
+    backgroundColor: 'white'
   },
   categoriesPhoto: {
     width: '100%',

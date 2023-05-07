@@ -11,11 +11,13 @@ const ToastNotification = (prop) => {
             entering={FadeInUp}
             exiting={FadeOutUp}
             style={{
+                height:100,
                 marginLeft: 10,
                 backgroundColor: background,
-                width: '90%',
+                width: '100%',
                 position: 'absolute',
                 borderRadius: 5,
+                zIndex: 1000000,
                 padding: 20,
                 flexDirection: 'row',
                 justifyContent: 'flex-start',

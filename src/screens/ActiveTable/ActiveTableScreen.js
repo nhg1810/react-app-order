@@ -1,15 +1,18 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import { FlatList, Text, View, Image, TouchableHighlight, Button } from "react-native";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
+import { FlatList, Text, View, Image, TouchableHighlight, Button, ActivityIndicator } from "react-native";
 import styles from "./styles";
 import { categories } from "../../data/dataArrays";
 import { getNumberOfRecipes } from "../../data/MockDataAPI";
 import MenuImage from "../../components/MenuImage/MenuImage";
+import { SocketContext } from "../../context/SocketContext";
 
 export default function ActiveTableScreen(props) {
   // list of table
-  const URLApi = "http://192.168.1.10:3000/get-all-table";
+  const URLApi = "https://40a6-113-176-178-251.ngrok-free.app/get-all-table";
   const [table, setTable] = useState([]);
   const { navigation, route } = props;
+  const [loader, setLoader] = useState(true)
+  const { server } = useContext(SocketContext);
 
   useEffect(() => {
     console.log('re render')
@@ -17,7 +20,7 @@ export default function ActiveTableScreen(props) {
       console.log('all table render')
 
     }
-  }, [route])
+  }, [route, server])
 
   // call api account
   getApi()
@@ -48,10 +51,17 @@ export default function ActiveTableScreen(props) {
       })
 
     },
-      [route])
+      [route, server])
       ;
   }
 
+  useEffect(() => {
+    if (table) {
+      setTimeout(function () {
+        setLoader(false);
+      }, 2000)
+    }
+  }, [table])
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitleStyle: {
@@ -79,26 +89,31 @@ export default function ActiveTableScreen(props) {
   const detailPayment = (item, length) => {
     navigation.navigate("DetailPayment", { item, length });
   }
-  const renderTable = ({ item }) => (
-    <TouchableHighlight underlayColor="rgba(73,182,77,0.9)" onPress={() => detailPayment(item, item.product.length)}>
-      <View style={styles.categoriesItemContainer}>
-        <Image style={styles.categoriesPhoto} source={{ uri: item.product[0].prod.image[0].urlLinkImage }} />
-        <Text style={styles.categoriesName}>Tên bàn: {item.name}</Text>
-        <Text style={styles.categoriesInfo}>Nv phục vụ: {item.account.name}</Text>
-        <Text style={styles.categoriesInfo}>{item.product.length} sản phẩm</Text>
-
-
-      </View>
-    </TouchableHighlight>
-  );
+  const renderTable = ({ item }) => {
+    console.log(item.product[0].prod.image[0].urlLinkImage.trim())
+    if (item.product[0].prod.image[0].urlLinkImage) {
+      return (<TouchableHighlight underlayColor="rgba(73,182,77,0.9)" onPress={() => detailPayment(item, item.product.length)}>
+        <View style={styles.categoriesItemContainer}>
+          <Image style={styles.categoriesPhoto} source={{ uri: item.product[0].prod.image[0].urlLinkImage.trim() }} />
+          <Text style={styles.categoriesName}>Tên bàn: {item.name}</Text>
+          <Text style={styles.categoriesInfo}>Nv phục vụ: {item.account.name}</Text>
+          <Text style={styles.categoriesInfo}>{item.product.length} sản phẩm</Text>
+        </View>
+      </TouchableHighlight>)
+    }
+  };
 
   return (
-    <View style={styles.areaContainTable}>
-      <FlatList vertical showsVerticalScrollIndicator={false} numColumns={2} data={table} renderItem={renderTable} keyExtractor={(item) => `${item._id}`} />
-      <Button
-        title="Thêm order"
-        onPress={() => onPressAddCart()}
-      />
-    </View>
+    loader ? <View style={styles.viewLoader}>
+      <ActivityIndicator size="large" />
+      <Text>Đang tải...</Text>
+    </View> :
+      <View style={styles.areaContainTable}>
+        <FlatList vertical showsVerticalScrollIndicator={false} numColumns={2} data={table} renderItem={renderTable} keyExtractor={(item) => `${item._id}`} />
+        <Button
+          title="Thêm order"
+          onPress={() => onPressAddCart()}
+        />
+      </View>
   );
 }

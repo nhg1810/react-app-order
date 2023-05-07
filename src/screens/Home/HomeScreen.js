@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import { FlatList, Text, View, TouchableHighlight, Image } from "react-native";
+import { FlatList, Text, View, TouchableHighlight, Image, ActivityIndicator } from "react-native";
 import styles from "./styles";
 import { recipes } from "../../data/dataArrays";
 import MenuImage from "../../components/MenuImage/MenuImage";
@@ -7,7 +7,8 @@ import { getCategoryName } from "../../data/MockDataAPI";
 
 export default function HomeScreen(props) {
   const [product, setProduct] = useState([])
-  var URLApi = "http://192.168.1.10:3000/get-all-prod";
+  const [loader, setLoader] = useState(true);
+  var URLApi = "https://40a6-113-176-178-251.ngrok-free.app/get-all-prod";
   //fetch data get all prod
   // call api
   useEffect(() => {
@@ -19,7 +20,7 @@ export default function HomeScreen(props) {
         }).then(function (rs) {
           if (!rs) {
             alert("error api, cant fetch !!!, Click again !")
-          } else {           
+          } else {
             setProduct(rs)
           }
         })
@@ -31,6 +32,13 @@ export default function HomeScreen(props) {
   },
     [])
     ;
+  useEffect(() => {
+    if (product.length != 0) {
+      setTimeout(function () {
+        setLoader(false);
+      }, 1000)
+    }
+  }, [product])
 
   const { navigation } = props;
 
@@ -53,19 +61,29 @@ export default function HomeScreen(props) {
     navigation.navigate("Recipe", { item });
   };
 
-  const renderRecipes = ({ item }) => (
-    <TouchableHighlight underlayColor="rgba(73,182,77,0.9)" onPress={() => onPressRecipe(item)}>
-      <View style={styles.container}>
-        <Image style={styles.photo} source={{ uri: item.image[0].urlLinkImage }} />
-        <Text style={styles.title}>{item.nameProduct}</Text>
-        <Text style={styles.category}>{item.category.name}</Text>
-      </View>
-    </TouchableHighlight>
-  );
+  const renderRecipes = ({ item }) => {
+    if (item) {
+      console.log(item.image[0].urlLinkImage.trim());
+      return (<TouchableHighlight underlayColor="rgba(73,182,77,0.9)" onPress={() => onPressRecipe(item)}>
+        <View style={styles.container}>
+          <Image style={styles.photo} source={{ uri: item.image[0].urlLinkImage.trim() }} />
+          <Text style={styles.title}>{item.nameProduct}</Text>
+          <Text style={styles.category}>{item.category.name}</Text>
+        </View>
+      </TouchableHighlight>)
+    }
+
+
+  };
 
   return (
-    <View>
-      <FlatList vertical showsVerticalScrollIndicator={false} numColumns={2} data={product} renderItem={renderRecipes} keyExtractor={(item) => `${item._id}`} />
+    loader ? <View style={styles.viewLoader}>
+      <ActivityIndicator size="large" />
+      <Text>Đang tải...</Text>
     </View>
+      :
+      <View style={styles.containProduct}>
+        <FlatList vertical showsVerticalScrollIndicator={false} numColumns={2} data={product} renderItem={renderRecipes} keyExtractor={(item) => `${item._id}`} />
+      </View>
   );
 }

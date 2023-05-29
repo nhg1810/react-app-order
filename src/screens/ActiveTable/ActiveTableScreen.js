@@ -8,7 +8,7 @@ import { SocketContext } from "../../context/SocketContext";
 
 export default function ActiveTableScreen(props) {
   // list of table
-  const URLApi = "https://40a6-113-176-178-251.ngrok-free.app/get-all-table";
+  const URLApi = "http://192.168.1.26:3000/get-all-table";
   const [table, setTable] = useState([]);
   const { navigation, route } = props;
   const [loader, setLoader] = useState(true)

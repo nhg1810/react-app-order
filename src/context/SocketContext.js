@@ -13,7 +13,7 @@ export class SocketProvider extends Component {
     }
 
     componentDidMount() {
-        this.socket = io("https://40a6-113-176-178-251.ngrok-free.app");
+        this.socket = io("http://192.168.1.26:3000");
         this.socket.on("server-respone", msg => {
             if (msg) {
                 this.setState({

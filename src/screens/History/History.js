@@ -11,7 +11,7 @@ export default function History(props) {
     const [alert, setAlert] = useState([])
     const { server } = useContext(SocketContext);
     const [loader, setLoader] = useState(true);
-    var URLApi = "https://40a6-113-176-178-251.ngrok-free.app/get-all-alert";
+    var URLApi = "http://192.168.1.26:3000/get-all-alert";
     //fetch data get all prod
     // call api
     useEffect(() => {

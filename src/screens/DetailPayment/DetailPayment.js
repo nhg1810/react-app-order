@@ -78,7 +78,7 @@ export default function DetailPayment(props) {
     }, [listOrder]);
 
     const [product, setProduct] = useState([])
-    var URLApi = "https://40a6-113-176-178-251.ngrok-free.app/get-all-prod";
+    var URLApi = "http://192.168.1.26:3000/get-all-prod";
     //fetch data get all prod
     // call api
     useEffect(() => {
@@ -263,7 +263,7 @@ export default function DetailPayment(props) {
             }
         }
         console.log(api_obj);
-        let rs = await postData("https://40a6-113-176-178-251.ngrok-free.app/update-order", api_obj);
+        let rs = await postData("http://192.168.1.26:3000/update-order", api_obj);
         if (rs == 'success') {
             context.sendMessageToSocket({
                 status: 'ok',
@@ -272,7 +272,7 @@ export default function DetailPayment(props) {
             })
             Alert.alert('Thành công', 'Cập nhật bill thành công!');
             navigation.navigate("ActiveTable", { message: 'render' });
-            let save_alert = await postData("https://40a6-113-176-178-251.ngrok-free.app/add-alert", {
+            let save_alert = await postData("http://192.168.1.26:3000/add-alert", {
                 target: 'update-bill',
                 content: deltailOrder.name + ' đã được ' + deltailOrder.account.name + ' cập nhật món ' + str_order_more
 
@@ -309,7 +309,7 @@ export default function DetailPayment(props) {
                     status: true
                 }
             }
-            let rs = await postData("https://40a6-113-176-178-251.ngrok-free.app/update-order", api_obj);
+            let rs = await postData("http://192.168.1.26:3000/update-order", api_obj);
             if (rs == 'success') {
                 console.log('des', deltailOrder)
                 context.sendMessageToSocket({
@@ -319,7 +319,7 @@ export default function DetailPayment(props) {
                 })
                 Alert.alert('Thành công', 'Thanh toán thành công ! Kiếm tra đơn đã thanh toán ở mục quản lí đơn');
                 navigation.navigate("ActiveTable", { message: 'render' });
-                let save_alert = await postData("https://40a6-113-176-178-251.ngrok-free.app/add-alert", {
+                let save_alert = await postData("http://192.168.1.26:3000/add-alert", {
                     target: 'payment-successful',
                     content: deltailOrder.name + ' đã được ' + deltailOrder.account.name + ' thanh toán!'
                 })
@@ -332,7 +332,7 @@ export default function DetailPayment(props) {
                     status: true
                 }
             }
-            let rs = await postData("https://40a6-113-176-178-251.ngrok-free.app/update-order", api_obj);
+            let rs = await postData("http://192.168.1.26:3000/update-order", api_obj);
             if (rs == 'success') {
                 context.sendMessageToSocket({
                     status: 'ok',
@@ -341,7 +341,7 @@ export default function DetailPayment(props) {
                 })
                 Alert.alert('Thành công', 'Thanh toán thành công ! Kiếm tra đơn đã thanh toán ở mục quản lí đơn');
                 navigation.navigate("ActiveTable", { message: 'render' });
-                let save_alert = await postData("https://40a6-113-176-178-251.ngrok-free.app/add-alert", {
+                let save_alert = await postData("http://192.168.1.26:3000/add-alert", {
                     target: 'payment-successful',
                     content: deltailOrder.name + ' đã được ' + deltailOrder.account.name + ' thanh toán!'
                 })
